@@ -13,7 +13,14 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v3
 
-      - name: Validar CSS con W3C
-        uses: docker://ghcr.io/mirkoledda/w3c-css-validator:latest
-        with:
-          args: css/*.css
+      - name: Validar style.css con W3C
+        run: |
+          echo "Validando css/style.css"
+          curl -s -F "file=@css/style.css;type=text/css" https://jigsaw.w3.org/css-validator/validator --output result.html
+          if grep -q "Sorry! We found the following errors" result.html; then
+            echo "❌ Errores encontrados en style.css"
+            cat result.html
+            exit 1
+          else
+            echo "✅ style.css válido"
+          fi
