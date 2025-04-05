@@ -1,0 +1,19 @@
+name: Validar CSS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validar-css:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Validar CSS con W3C
+        uses: mirkoledda/w3c-css-validator@v1.2.2
+        with:
+          files: "css/*.css"
