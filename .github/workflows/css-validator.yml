@@ -1,26 +1,39 @@
+# Nombre del flujo de trabajo que aparecerá en la pestaña de Actions en GitHub
 name: Validar CSS
 
+# Evento que dispara la ejecución del flujo: cada vez que se haga un push a la rama main
 on:
   push:
     branches:
       - main
 
 jobs:
+  # Nombre del job (tarea) que se ejecutará
   validar-css:
+    # Sistema operativo que usará la máquina virtual de GitHub Actions
     runs-on: ubuntu-latest
 
     steps:
+      # Paso 1: Clonar el repositorio para acceder a los archivos del proyecto
       - name: Checkout del código
         uses: actions/checkout@v3
 
+      # Paso 2: Validar el archivo CSS con el validador oficial de W3C
       - name: Validar style.css con W3C
         run: |
+          # Mostrar mensaje en la consola indicando qué archivo se está validando
           echo "Validando css/style.css"
+
+          # Enviar el archivo CSS al validador de W3C y guardar la respuesta en result.html
           curl -s -F "file=@css/style.css;type=text/css" https://jigsaw.w3.org/css-validator/validator --output result.html
+
+          # Buscar si la respuesta contiene errores
           if grep -q "Sorry! We found the following errors" result.html; then
+            # Si hay errores, mostrar mensaje, imprimir resultado completo y marcar como fallo
             echo "❌ Errores encontrados en style.css"
             cat result.html
             exit 1
           else
+            # Si no hay errores, mostrar mensaje de éxito
             echo "✅ style.css válido"
           fi
