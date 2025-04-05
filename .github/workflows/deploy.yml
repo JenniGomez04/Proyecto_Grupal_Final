@@ -23,8 +23,10 @@ jobs:
           root: ./
 
   deploy:  # Despliegue del sitio
-    needs: validate-html  # Solo se ejecuta si la validación de HTML fue exitosa
-    runs-on: ubuntu-latest  
+    needs: validate-html
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages  # 👈 necesario para evitar el error
     steps:
       - name: Checkout del código  
         uses: actions/checkout@v3 
@@ -35,7 +37,7 @@ jobs:
       - name: Subir archivos para GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./  # Sube los archivos de la raíz del repo
+          path: ./  # Puedes cambiar esto si los archivos están en otro directorio
 
       - name: Desplegar en GitHub Pages
         uses: actions/deploy-pages@v4
